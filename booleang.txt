@@ -1,0 +1,64 @@
+# booleang prototype
+
+# adds three bits
+circuit adder (a, b, cin) -> (sum, cout) {
+	(a ^ b) ^ cin -> sum;
+	((a ^ b) & cin) | (a & b) -> cout;
+}
+
+# adds two 4-bit integers
+circuit add4 (a0, a1, a2, a3, b0, b1, b2, b3) -> (s0, s1, s2, s3, carry) {
+	adder (a0, b0, 0) -> (s0, c0);
+	adder (a1, b1, c0) -> (s1, c1);
+	adder (a2, b2, c1) -> (s2, c2);
+	adder (a3, b3, carry) -> (s3, c3);
+}
+
+# a 4-bit adder
+circuit main () -> () {
+	# define macros - i.e. named sets of variables
+	%na  (ia0, ia1, ia2, ia3);
+	%nb  (ib0, ib1, ib2, ib3);
+	%sum (s0,  s1,  s2,  s3, carry);
+
+	# input two 4-bit integers
+	# input pauses execution until an input is made
+	# note: least significant bit at the left
+	input () -> (%na);
+	input () -> (%nb);
+	
+	# add two inputs
+	add4 (%na, %nb) -> (%sum);
+
+	# output the sum
+	# oint interprets n bits as an n-bit int and prints it
+	oint (%sum) -> ();
+}
+
+# a basic function
+circuit invert (a) -> (b) {
+	!a -> b;
+}
+
+# syntax
+circuit some_syntax {
+	# <v,n> notation puts value v into an n-bit set
+	%an_int <17,8>;
+	
+	# "foo" notation makes a UTF-8-encoded set of bits
+	%a_string "hello 🌍";
+	
+	# [c a, b...] notation calls circuit c with arguments a, b...
+	# and returns the result
+	# (obit prints a bit)
+	# (a . b concatenates strings a and b)
+	obit ("high: " . [invert 1]);
+}
+
+# using a clock
+circuit using_a_clock {
+	clock 1 second (tick) {
+		ostr ("hello for the " . tick . "th time");
+
+	}
+}
