@@ -7,10 +7,8 @@ include "cpu.bl";
 
 # adds three bits
 circuit adder (a, b, cin) -> (sum, cout) {
-	(
-		(a ^ b) ^ cin),
-		((a ^ b) & cin) | (a & b)
-	) -> (sum, cout)
+	(a ^ b) ^ cin) -> sum;
+	((a ^ b) & cin) | (a & b) -> cout;
 }
 
 # adds two 4-bit integers
