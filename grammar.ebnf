@@ -24,8 +24,13 @@ infix op = "&" | "|" | "^" | "∧" | "∨" | "⊻";
 
 alpha = lowercase | uppercase;
 alphanum = alpha | digit;
+char = ? all printable characters ?;
 
 ident = alpha, { alphanum };
+
+string = ('"', { char }, '"') |
+         ("'", { char }, "'");
+
 number = [ "-" ], { digit }, [ ".", { digit } ];
 duration = number, ("ns" | "ms" | "s" | "m" | "h");
 
@@ -56,4 +61,5 @@ stmts = { macro | call | pipe | clock };
 (* top-level productions *)
 
 circuit = "circuit", ident, [ idents, "->", idents ], "{", stmts, "}";
-program = ["name", ":", { ident }, ";"], { circuit };
+include = "include", string;
+program = ["name", ":", { ident }, ";"], { circuit | include };
