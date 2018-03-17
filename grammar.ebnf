@@ -4,6 +4,9 @@
     this file contains the grammar of booleang. it's intentionally
     very simple -- all operators have the same precedence, semicolons
     are required, etc...
+
+    I will try to keep it up to date with any changes, but I won't promise
+    anything.
 *)
 
 bit = "0" | "1";
