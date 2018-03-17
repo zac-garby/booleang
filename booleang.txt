@@ -57,7 +57,7 @@ circuit some_syntax {
 
 # using a clock
 circuit using_a_clock {
-	clock 1 second (tick) {
+	clock 1s (tick) {
 		ostr ("hello for the " . tick . "th time");
 	}
 }
