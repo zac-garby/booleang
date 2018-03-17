@@ -1,5 +1,5 @@
 # booleang programs can optionally start with a name definition
-name: booleang prototype;
+name: "booleang prototype";
 
 # include some files
 include "adder.bl";

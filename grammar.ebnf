@@ -58,4 +58,4 @@ stmts = { macro | call | pipe | clock };
 
 circuit = "circuit", ident, [ idents, "->", idents ], "{", stmts, "}";
 include = "include", string;
-program = ["name", ":", { ident }, ";"], { circuit | include };
+program = ["name", ":", string, ";"], { circuit | include };
