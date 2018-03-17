@@ -14,6 +14,7 @@ const (
 
 	Number = "number"
 	Ident  = "identifier"
+	String = "string"
 
 	Prefix = "prefix"
 	Infix  = "infix"
@@ -31,6 +32,7 @@ const (
 	Clock   = "clock"
 	Name    = "name"
 	Circuit = "circuit"
+	Include = "include"
 )
 
 // Keywords maps keyword literals to their types.
@@ -38,6 +40,7 @@ var Keywords = map[string]Type{
 	"clock":   Clock,
 	"name":    Name,
 	"circuit": Circuit,
+	"include": Include,
 }
 
 // IsKeyword checks whether or not a Type is a keyword.
