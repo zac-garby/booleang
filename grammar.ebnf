@@ -49,7 +49,7 @@ call = ( ident, exprs, "->", ( ident | idents ), ";" ) |
 pipe = ( exprs, "->", idents, ";" ) |
        ( expr, "->", ident );
 
-clock = "clock", duration, "%", ident, "{", stmts, "}";
+clock = "clock", duration, ["%", ident], "{", stmts, "}";
 
 stmts = { macro | call | pipe | clock };
 
