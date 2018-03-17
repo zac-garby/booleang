@@ -1,9 +1,12 @@
-# booleang prototype
+# booleang programs can optionally start with a name definition
+name: booleang prototype;
 
 # adds three bits
 circuit adder (a, b, cin) -> (sum, cout) {
-	(a ^ b) ^ cin -> sum;
-	((a ^ b) & cin) | (a & b) -> cout;
+	(
+		(a ^ b) ^ cin),
+		((a ^ b) & cin) | (a & b)
+	) -> (sum, cout)
 }
 
 # adds two 4-bit integers
@@ -32,7 +35,7 @@ circuit main () -> () {
 
 	# output the sum
 	# oint interprets n bits as an n-bit int and prints it
-	oint (%sum) -> ();
+	oint (%sum);
 }
 
 # a basic function
@@ -40,24 +43,9 @@ circuit invert (a) -> (b) {
 	!a -> b;
 }
 
-# syntax
-circuit some_syntax {
-	# <v,n> notation puts value v into an n-bit set
-	%an_int <17,8>;
-
-	# "foo" notation makes a UTF-8-encoded set of bits
-	%a_string "hello 🌍";
-
-	# [c a, b...] notation calls circuit c with arguments a, b...
-	# and returns the result
-	# (obit prints a bit)
-	# (a . b concatenates strings a and b)
-	obit ("high: " . [invert 1]);
-}
-
 # using a clock
 circuit using_a_clock {
-	clock 1s (tick) {
-		ostr ("hello for the " . tick . "th time");
+	clock 1s %tick {
+		onum (%tick);
 	}
 }
