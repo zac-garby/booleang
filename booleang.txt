@@ -26,7 +26,7 @@ circuit main () -> () {
 	# note: least significant bit at the left
 	input () -> (%na);
 	input () -> (%nb);
-	
+
 	# add two inputs
 	add4 (%na, %nb) -> (%sum);
 
@@ -44,10 +44,10 @@ circuit invert (a) -> (b) {
 circuit some_syntax {
 	# <v,n> notation puts value v into an n-bit set
 	%an_int <17,8>;
-	
+
 	# "foo" notation makes a UTF-8-encoded set of bits
 	%a_string "hello 🌍";
-	
+
 	# [c a, b...] notation calls circuit c with arguments a, b...
 	# and returns the result
 	# (obit prints a bit)
@@ -59,6 +59,5 @@ circuit some_syntax {
 circuit using_a_clock {
 	clock 1 second (tick) {
 		ostr ("hello for the " . tick . "th time");
-
 	}
 }
