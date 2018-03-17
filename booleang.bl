@@ -1,6 +1,10 @@
 # booleang programs can optionally start with a name definition
 name: booleang prototype;
 
+# include some files
+include "adder.bl";
+include "cpu.bl";
+
 # adds three bits
 circuit adder (a, b, cin) -> (sum, cout) {
 	(
