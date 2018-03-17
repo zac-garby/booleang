@@ -11,6 +11,9 @@ import (
 // New takes a string and returns a stream of tokens in the form of
 // a generator closure function.
 func New(str, file string) func() token.Token {
+	// Add a newline at the end of the file to prevent errors
+	str += "\n"
+
 	var (
 		index = 0
 		col   = 1
