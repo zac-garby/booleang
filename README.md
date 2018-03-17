@@ -87,7 +87,7 @@ circuit invert (a) -> (b) {
 It's a very simple circuit which takes an argument, `a`, and stores the inverse
 of it in the output parameter `b`. Think of this circuit like a NOT gate:
 
-<center>![](assets/invert.png)</center>
+![](assets/invert.png)
 
 You could call the above `invert` circuit using this syntax:
 
@@ -162,7 +162,7 @@ Inside a computer, numbers are added using full adder circuits. Full adders
 take two bits and a carry, `C in`, and output a sum and another carry, `C out`.
 A full adder looks like this:
 
-<center>![](assets/full adder.png)</center>
+![](assets/full adder.png)
 
 Here's the same thing written in Booleang. If you've downloaded the interpreter,
 see if you can write it yourself without looking.
@@ -177,7 +177,7 @@ circuit adder (a, b, cin) -> (sum, cout) {
 Then, to actually add the two integers, you'd make a circuit something like
 this:
 
-<center>![](assets/4-bit adder.png)</center>
+![](assets/4-bit adder.png)
 
 This might look quite complicated at first. The orange boxes labelled "FA" are
 full adders, as in the previous circuit diagram. The left input is `C in`,
