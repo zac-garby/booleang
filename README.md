@@ -103,7 +103,7 @@ Also, note: output parameters from circuits don't have to be existing variables.
 If they aren't already defined, they will be created in the calling scope.
 
 Circuits can have any number of input or output parameters. In
-[booleang.txt](booleang.txt), you can see an example of a
+[booleang.bl](booleang.bl), you can see an example of a
 [full adder](https://en.wikipedia.org/wiki/Adder_%28electronics%29#Full_adder)
 
 ## Macros
