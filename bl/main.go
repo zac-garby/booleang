@@ -8,6 +8,9 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+
+	"github.com/Zac-Garby/booleang/lexer"
+	"github.com/Zac-Garby/booleang/token"
 )
 
 func main() {
@@ -28,11 +31,23 @@ func main() {
 			break
 		}
 
-		fmt.Println(line)
+		handleInput(line)
 	}
 }
 
 func quit() {
 	fmt.Println("quit")
 	os.Exit(0)
+}
+
+func handleInput(input string) {
+	if input == "quit" {
+		quit()
+	}
+
+	l := lexer.New(input, "repl")
+
+	for tok := l(); tok.Type != token.EOF; tok = l() {
+		fmt.Println(tok.String())
+	}
 }
