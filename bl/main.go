@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 
 	"github.com/Zac-Garby/booleang/lexer"
 	"github.com/Zac-Garby/booleang/token"
@@ -41,7 +42,7 @@ func quit() {
 }
 
 func handleInput(input string) {
-	if input == "quit" {
+	if strings.TrimSpace(input) == "quit" {
 		quit()
 	}
 
