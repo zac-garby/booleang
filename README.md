@@ -39,7 +39,7 @@ Any other outputted variables would be displayed below.
 
 After outputting it, a 1Hz clock is started. Every second, `a` is flipped,
 so `0` will turn into `1` and vice versa. The cool thing about booleang is that
-the output changes, so instead of saying `a .... 0`, it will change to say:
+the output changes, so instead of saying `a = 0`, it will change to say:
 
 ```
 a = 1
