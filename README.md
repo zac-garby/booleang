@@ -2,6 +2,8 @@
 
 A structured boolean-logic programming language. It uses a completely different paradigm from any other language I've seen before, so it might be difficult to actually use it. The main purpose is for experimenting with boolean logic and logic circuits, and possibly also for testing the logic behind real life circuits.
 
+I'm not entirely sure, but I believe it would be theoretically possible to actually write a fully-fledged CPU using Booleang.
+
 ## Example
 
 ```
@@ -20,7 +22,7 @@ circuit main () -> () {
 }
 ```
 
-This example defines a variable `a` which is initally set to `0`. A variable can either be `1` or `0`.
+This example defines a register `a` which is initally set to `0`. A register can either be `1` or `0`.
 
 `a` is outputted using the `obit` builtin function, which means that it will be persistantly displayed to the terminal. Running the program will produce this output:
 
@@ -28,7 +30,7 @@ This example defines a variable `a` which is initally set to `0`. A variable can
 a = 0
 ```
 
-Any other outputted variables would be displayed below.
+Any other outputted registers would be displayed below.
 
 After outputting it, a 1Hz clock is started. Every second, `a` is flipped, so `0` will turn into `1` and vice versa. The cool thing about booleang is that the output changes, so instead of saying `a = 0`, it will change to say:
 
@@ -62,7 +64,7 @@ It's very likely that more will be added in the future. NAND, for example.
 
 ## Circuits
 
-You've already seen a circuit in the first example of this document. A circuit is basically a function, but called a circuit instead to fit in with the logic circuit theme, and also to emphasise the differences. Like functions, circuits can take arguments. But, unlike functions in most other languages, they return values to specific variables too. Look at this example:
+You've already seen a circuit in the first example of this document. A circuit is basically a function, but called a circuit instead to fit in with the logic circuit theme, and also to emphasise the differences. Like functions, circuits can take arguments. But, unlike functions in most other languages, they return values to specific registers too. Look at this example:
 
 ```
 circuit invert (a) -> (b) {
@@ -84,13 +86,13 @@ circuit main () -> () {
 }
 ```
 
-Also, note: output parameters from circuits don't have to be existing variables. If they aren't already defined, they will be created in the calling scope.
+Also, note: output parameters from circuits don't have to be existing registers. If they aren't already defined, they will be created in the calling scope.
 
 Circuits can have any number of input or output parameters. In <booleang.bl>, you can see an example of a [full adder](https://en.wikipedia.org/wiki/Adder_%28electronics%29#Full_adder)
 
 ## Macros
 
-It may seem quite unwieldy for all variables to be a single bit, but in practice it doesn't matter. Of course, Booleang isn't really a general purpose language, but either way, you can actually represent any digital data using a number of bits. For example, the number 9 could be represented as 4 bits. In the example below, the number 9 is represented using four variables, `b0` being the least significant bit and `b3` being the most.
+It may seem quite unwieldy for all registers to be a single bit, but in practice it doesn't matter. Of course, Booleang isn't really a general purpose language, but either way, you can actually represent any digital data using a number of bits. For example, the number 9 could be represented as 4 bits. In the example below, the number 9 is represented using four registers, `b0` being the least significant bit and `b3` being the most.
 
 ```
 circuit four () -> () {
