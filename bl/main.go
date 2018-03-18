@@ -10,8 +10,7 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/Zac-Garby/booleang/lexer"
-	"github.com/Zac-Garby/booleang/token"
+	"github.com/Zac-Garby/booleang/parser"
 )
 
 func main() {
@@ -46,9 +45,11 @@ func handleInput(input string) {
 		quit()
 	}
 
-	l := lexer.New(input, "repl")
-
-	for tok := l(); tok.Type != token.EOF; tok = l() {
-		fmt.Println(tok.String())
+	p := parser.New(input, "stdin")
+	prog, err := p.Parse()
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	fmt.Println(prog)
 }
