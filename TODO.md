@@ -21,3 +21,9 @@ A list of things to do, once the core language is implemented. In no particular 
      - `%name "hello 🌍"`
    - Macro init values
      - `%num (a:1, b:0, c: 1, d: 1)`
+   - Output syntax
+     - `output` keyword
+	 - `output <type> (<registers>)`
+	 - if `<type>` is `bit`, `<registers>` should be a single bit.
+	 - if `<type>` is `string`, `<registers>` should be a UTF-8 encoded string.
+	 - if `<type>` is one of `unsigned`, `signed`, `float`, it's followed by an integer -- the number of bits.
