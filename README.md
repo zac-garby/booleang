@@ -1,6 +1,10 @@
 # booleang
 
+**Note: as of now, everything in this README is theoretical, as the language isn't implemented yet**
+
 A structured boolean-logic programming language. It uses a completely different paradigm from any other language I've seen before, so it might be difficult to actually use it. The main purpose is for experimenting with boolean logic and logic circuits, and possibly also for testing the logic behind real life circuits.
+
+In Booleang, your code doesn't really _do_ anything. Instead, it describes a logic circuit. The actual API has one function for constructing the execution graph (essentially that means the logic circuit), and another for stepping the simulation. The size of a step can be defined, and by default it's 1s. There is also a way to automatically step the simulation so the steps are in time with real life.
 
 I'm not entirely sure, but I believe it would be theoretically possible to actually write a fully-fledged CPU using Booleang.
 
