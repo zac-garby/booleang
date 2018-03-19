@@ -14,7 +14,7 @@ type Error struct {
 
 func (e *Error) Error() string {
 	return fmt.Sprintf(
-		"{* Parse Error @ [%s %d:%d-%d:%d] *} %s",
+		"-* Parse Error @ [%s %d:%d-%d:%d] *- %s",
 		e.Range.Start.File,
 		e.Range.Start.Line,
 		e.Range.Start.Col,
