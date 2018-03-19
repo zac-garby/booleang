@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"math"
 	"strconv"
 	"time"
 
@@ -51,19 +50,14 @@ func (p *Parser) expect(t token.Type) bool {
 	return false
 }
 
-func (p *Parser) parseNumberRaw() (float64, error) {
-	return strconv.ParseFloat(p.cur.Literal, 64)
+func (p *Parser) parseInt() (int64, error) {
+	return strconv.ParseInt(p.cur.Literal, 10, 64)
 }
 
 func (p *Parser) parseDuration() *time.Duration {
-	val, err := p.parseNumberRaw()
+	val, err := p.parseInt()
 	if err != nil {
 		p.Errors = append(p.Errors, err)
-		return nil
-	}
-
-	if math.Floor(val) != val {
-		p.curErr("clock duration must be an integer. use a smaller time denomination if necessary")
 		return nil
 	}
 
@@ -156,4 +150,19 @@ func (p *Parser) parseIdents(end token.Type) []string {
 	}
 
 	return idents
+}
+
+func (p *Parser) parseStatements() []ast.Statement {
+	var stmts []ast.Statement
+	p.next()
+
+	for !p.curIs(token.RightBrace) && !p.curIs(token.EOF) {
+		stmt := p.parseStatement()
+		if stmt != nil {
+			stmts = append(stmts, stmt)
+		}
+		p.next()
+	}
+
+	return stmts
 }
