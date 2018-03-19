@@ -22,15 +22,21 @@ type Expression interface {
 	Expression()
 }
 
+// A Parameter is either a macro or an identifier.
+type Parameter struct {
+	Macro bool
+	Name  string
+}
+
 // Parameters are a list of strings.
-type Parameters []string
+type Parameters []Parameter
 
 // A Circuit is similar to a function in other languages - it
 // is a bit of code you can call upon later. A Circuit is neither
 // a statement or an expression.
 type Circuit struct {
 	Name            string
-	Inputs, Outputs Parameters
+	Inputs, Outputs []string
 	Statements      []Statement
 }
 
@@ -51,9 +57,9 @@ type stmt struct{}
 func (s *stmt) Statement() {}
 
 type (
-	// A Macro statement gives a name to a set of registers.
+	// A MacroStmt statement gives a name to a set of registers.
 	// e.g. %num (a0, a1, a2, a3);
-	Macro struct {
+	MacroStmt struct {
 		*stmt
 		Name      string
 		Registers Parameters
@@ -119,5 +125,12 @@ type (
 		*expr
 		Right    Expression
 		Operator string
+	}
+
+	// A MacroExpr expands to all the registers inside a macro.
+	// e.g. %a
+	MacroExpr struct {
+		*expr
+		Name string
 	}
 )

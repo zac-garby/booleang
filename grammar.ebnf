@@ -38,6 +38,7 @@ duration = number, ("ns" | "ms" | "s" | "m" | "h");
 idents = "(", { ident, "," }, ident, ")";
 
 expr = ident | bit |
+	   ( "%", ident ) |
        ( "(", expr, ")" ) |
        ( prefix op, expr ) |
        ( expr, infix op, expr );
