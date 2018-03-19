@@ -4,6 +4,7 @@ A list of things to do, once the core language is implemented. In no particular 
 
  - Booleang -> circuit diagram, using Graphviz
  - AST renderer with Graphviz
+ - A web interface
  - Make a cool CPU example program
  - Make standard libraries
  - Extend language:
