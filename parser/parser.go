@@ -59,3 +59,53 @@ func (p *Parser) Parse() (prog *ast.Program, err error) {
 
 	return prog, nil
 }
+
+func (p *Parser) parseExpression() ast.Expression {
+	var left ast.Expression
+
+	switch p.cur.Type {
+	case token.Ident:
+		left = &ast.Identifier{
+			Value: p.cur.Literal,
+		}
+
+	case token.Number:
+		if !(p.cur.Literal == "0" || p.cur.Literal == "1") {
+			p.curErr("a bit literal must be 0 or 1")
+			return nil
+		}
+
+		left = &ast.Bit{
+			Value: p.cur.Literal == "1",
+		}
+
+	case token.LeftParen:
+		p.next()
+		left = p.parseExpression()
+		if !p.expect(token.RightParen) {
+			return nil
+		}
+
+	case token.Prefix:
+		op := p.cur.Literal
+		p.next()
+		left = &ast.Prefix{
+			Operator: op,
+			Right:    p.parseExpression(),
+		}
+	}
+
+	if p.peekIs(token.Infix) {
+		op := p.peek.Literal
+		p.next()
+		p.next()
+		right := p.parseExpression()
+		left = &ast.Infix{
+			Left:     left,
+			Operator: op,
+			Right:    right,
+		}
+	}
+
+	return left
+}
