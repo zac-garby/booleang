@@ -30,6 +30,16 @@ func New(text, file string) *Parser {
 	return p
 }
 
+func (p *Parser) Parse() (prog *ast.Program, err error) {
+	prog = p.parse()
+
+	if len(p.Errors) > 0 {
+		return nil, p.Errors[0]
+	}
+
+	return prog, nil
+}
+
 func (p *Parser) parse() *ast.Program {
 	prog := &ast.Program{
 		Name: "unnamed",
@@ -45,19 +55,82 @@ func (p *Parser) parse() *ast.Program {
 		}
 
 		prog.Name = p.cur.Literal
+
+		if !p.expect(token.Semi) {
+			return nil
+		}
+	}
+
+	for !p.peekIs(token.EOF) {
+		p.next()
+
+		if p.cur.Type == token.Circuit {
+			circuit := p.parseCircuit()
+			if circuit == nil {
+				return nil
+			}
+
+			prog.Circuits = append(prog.Circuits, circuit)
+		} else if p.cur.Type == token.Include {
+			path, ok := p.parseInclude()
+			if !ok {
+				return nil
+			}
+
+			prog.Includes = append(prog.Includes, path)
+		} else {
+			p.curErr("only circuits and include statements can be written in the top-level of a file")
+			return nil
+		}
 	}
 
 	return prog
 }
 
-func (p *Parser) Parse() (prog *ast.Program, err error) {
-	prog = p.parse()
-
-	if len(p.Errors) > 0 {
-		return nil, p.Errors[0]
+func (p *Parser) parseCircuit() *ast.Circuit {
+	if !p.expect(token.Ident) {
+		return nil
 	}
 
-	return prog, nil
+	circ := &ast.Circuit{
+		Name: p.cur.Literal,
+	}
+
+	if p.peekIs(token.LeftParen) {
+		p.next()
+		circ.Inputs = ast.Parameters(p.parseIdents(token.RightParen))
+
+		if !p.expect(token.Arrow) {
+			return nil
+		}
+		if !p.expect(token.LeftParen) {
+			return nil
+		}
+
+		circ.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+	}
+
+	if !p.expect(token.LeftBrace) {
+		return nil
+	}
+
+	circ.Statements = p.parseStatements()
+
+	return circ
+}
+
+func (p *Parser) parseInclude() (path string, ok bool) {
+	if !p.expect(token.String) {
+		return "", false
+	}
+
+	path = p.cur.Literal
+
+	if !p.expect(token.Semi) {
+		return "", false
+	}
+
+	return path, true
 }
 
 func (p *Parser) parseExpression() ast.Expression {
@@ -108,4 +181,113 @@ func (p *Parser) parseExpression() ast.Expression {
 	}
 
 	return left
+}
+
+func (p *Parser) parseStatement() ast.Statement {
+	switch p.cur.Type {
+	case token.Macro:
+		stmt := &ast.Macro{}
+		if !p.expect(token.Ident) {
+			return nil
+		}
+		stmt.Name = p.cur.Literal
+
+		if !p.expect(token.LeftParen) {
+			return nil
+		}
+		stmt.Registers = ast.Parameters(p.parseIdents(token.RightParen))
+
+		if !p.expect(token.Semi) {
+			return nil
+		}
+
+		return stmt
+
+	case token.Clock:
+		stmt := &ast.Clock{}
+		if !p.expect(token.Number) {
+			return nil
+		}
+
+		stmt.Delay = p.parseDuration()
+
+		if p.peekIs(token.Macro) {
+			p.next()
+
+			if !p.expect(token.Ident) {
+				return nil
+			}
+
+			stmt.Counter = p.cur.Literal
+		}
+
+		if !p.expect(token.LeftBrace) {
+			return nil
+		}
+
+		stmt.Body = p.parseStatements()
+
+		return stmt
+
+	case token.Ident:
+		stmt := &ast.Call{
+			Circuit: p.cur.Literal,
+		}
+
+		if !p.expect(token.LeftParen) {
+			return nil
+		}
+		stmt.Inputs = p.parseExprs(token.RightParen)
+
+		if !p.peekIs(token.Arrow) {
+			return stmt
+		}
+
+		if !p.expect(token.LeftParen) {
+			return nil
+		}
+		stmt.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+
+		return stmt
+
+	case token.Number, token.Prefix:
+		stmt := &ast.Pipe{
+			Inputs: []ast.Expression{
+				p.parseExpression(),
+			},
+		}
+
+		if !p.expect(token.Arrow) {
+			return nil
+		}
+		if !p.expect(token.Ident) {
+			return nil
+		}
+
+		stmt.Outputs = ast.Parameters{
+			p.cur.Literal,
+		}
+
+		return stmt
+
+	case token.LeftParen:
+		stmt := &ast.Pipe{
+			Inputs: p.parseExprs(token.RightParen),
+		}
+
+		if !p.expect(token.Arrow) {
+			return nil
+		}
+		if !p.expect(token.LeftParen) {
+			return nil
+		}
+
+		stmt.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+
+		return stmt
+
+	default:
+		p.curErr("unexpected token '%s' at the start of a statement", p.cur.Type)
+		return nil
+	}
 }
