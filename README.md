@@ -11,7 +11,7 @@ I'm not entirely sure, but I believe it would be theoretically possible to actua
 ## Example
 
 ```
-circuit main () -> () {
+circuit main {
     # set a to low
     0 -> a;
 
@@ -49,7 +49,7 @@ Since `a` retains its state, you could think of it as a D-type flip-flop if you 
 Booleang supports all the logic operators you'd expect:
 
 ```
-circuit main () -> () {
+circuit main {
     # and, or, xor, not
     a & b -> c;
     a | b -> c;
@@ -83,7 +83,7 @@ It's a very simple circuit which takes an argument, `a`, and stores the inverse 
 You could call the above `invert` circuit using this syntax:
 
 ```
-circuit main () -> () {
+circuit main {
     0 -> x;
     invert (x) -> y;
     obit(y);
@@ -92,14 +92,14 @@ circuit main () -> () {
 
 Also, note: output parameters from circuits don't have to be existing registers. If they aren't already defined, they will be created in the calling scope.
 
-Circuits can have any number of input or output parameters. In <booleang.bl>, you can see an example of a [full adder](https://en.wikipedia.org/wiki/Adder_%28electronics%29#Full_adder)
+Circuits can have any number of input or output parameters. In <booleang.bl>, you can see an example of a [full adder](https://en.wikipedia.org/wiki/Adder_%28electronics%29#Full_adder).
 
 ## Macros
 
 It may seem quite unwieldy for all registers to be a single bit, but in practice it doesn't matter. Of course, Booleang isn't really a general purpose language, but either way, you can actually represent any digital data using a number of bits. For example, the number 9 could be represented as 4 bits. In the example below, the number 9 is represented using four registers, `b0` being the least significant bit and `b3` being the most.
 
 ```
-circuit four () -> () {
+circuit four () -> (b0, b1, b2, b3) {
     1 -> b0;
     0 -> b1;
     0 -> b2;
@@ -110,7 +110,7 @@ circuit four () -> () {
 Four lines just to make a number? Seriously?? No - of course not. This is a perfect use case for _macros_. Macros are used to group together sets of bits into one name.
 
 ```
-circuit four () -> () {
+circuit four () -> (b0, b1, b2, b3) {
     %four (b0, b1, b2, b3);
     (1, 0, 0, 1) -> %four;
 }
@@ -124,8 +124,7 @@ Once you have a number (see Macros above), what can you do with it? Well, you co
 
 ```
 circuit outputting (b0, b1, b2, b3) -> () {
-    %num (b0, b1, b2, b3);
-    onumu(%num);
+    onumu(b0, b1, b2, b3);
 }
 ```
 
