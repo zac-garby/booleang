@@ -4,11 +4,11 @@ package main
 // /bl directory will generate a binary called `bl`.
 
 import (
-	"bufio"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/signal"
-	"strings"
+	"path/filepath"
 
 	"github.com/Zac-Garby/booleang/parser"
 )
@@ -22,17 +22,20 @@ func main() {
 		quit()
 	}(c)
 
-	r := bufio.NewReader(os.Stdin)
+	args := os.Args
 
-	for {
-		fmt.Print("booleang> ")
-		line, err := r.ReadString('\n')
-		if err != nil {
-			break
-		}
-
-		handleInput(line)
+	if len(args) < 2 {
+		fmt.Println("no file specified...\nexecute a file by passing it's path as an argument")
+		os.Exit(1)
 	}
+
+	file, err := os.Open(args[1])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	handleFile(args[1], file)
 }
 
 func quit() {
@@ -40,15 +43,20 @@ func quit() {
 	os.Exit(0)
 }
 
-func handleInput(input string) {
-	if strings.TrimSpace(input) == "quit" {
-		quit()
+func handleFile(path string, file *os.File) {
+	text, err := ioutil.ReadAll(file)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
-	p := parser.New(input, "stdin")
+	filename := filepath.Base(path)
+
+	p := parser.New(string(text), filename)
 	prog, err := p.Parse()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	fmt.Println(prog)
