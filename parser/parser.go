@@ -98,7 +98,7 @@ func (p *Parser) parseCircuit() *ast.Circuit {
 
 	if p.peekIs(token.LeftParen) {
 		p.next()
-		circ.Inputs = ast.Parameters(p.parseIdents(token.RightParen))
+		circ.Inputs = p.parseIdents(token.RightParen)
 
 		if !p.expect(token.Arrow) {
 			return nil
@@ -107,7 +107,7 @@ func (p *Parser) parseCircuit() *ast.Circuit {
 			return nil
 		}
 
-		circ.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+		circ.Outputs = p.parseIdents(token.RightParen)
 	}
 
 	if !p.expect(token.LeftBrace) {
@@ -166,6 +166,14 @@ func (p *Parser) parseExpression() ast.Expression {
 			Operator: op,
 			Right:    p.parseExpression(),
 		}
+
+	case token.Macro:
+		if !p.expect(token.Ident) {
+			return nil
+		}
+		left = &ast.MacroExpr{
+			Name: p.cur.Literal,
+		}
 	}
 
 	if p.peekIs(token.Infix) {
@@ -186,7 +194,7 @@ func (p *Parser) parseExpression() ast.Expression {
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.cur.Type {
 	case token.Macro:
-		stmt := &ast.Macro{}
+		stmt := &ast.MacroStmt{}
 		if !p.expect(token.Ident) {
 			return nil
 		}
@@ -195,7 +203,7 @@ func (p *Parser) parseStatement() ast.Statement {
 		if !p.expect(token.LeftParen) {
 			return nil
 		}
-		stmt.Registers = ast.Parameters(p.parseIdents(token.RightParen))
+		stmt.Registers = p.parseParams(token.RightParen)
 
 		if !p.expect(token.Semi) {
 			return nil
@@ -244,13 +252,22 @@ func (p *Parser) parseStatement() ast.Statement {
 		stmt.Inputs = p.parseExprs(token.RightParen)
 
 		if !p.peekIs(token.Arrow) {
+			if !p.expect(token.Semi) {
+				return nil
+			}
+
 			return stmt
 		}
+		p.next()
 
 		if !p.expect(token.LeftParen) {
 			return nil
 		}
-		stmt.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+		stmt.Outputs = p.parseParams(token.RightParen)
+
+		if !p.expect(token.Semi) {
+			return nil
+		}
 
 		return stmt
 
@@ -264,12 +281,19 @@ func (p *Parser) parseStatement() ast.Statement {
 		if !p.expect(token.Arrow) {
 			return nil
 		}
-		if !p.expect(token.Ident) {
+		p.next()
+
+		param := p.parseParam()
+		if param == nil {
 			return nil
 		}
 
 		stmt.Outputs = ast.Parameters{
-			p.cur.Literal,
+			*param,
+		}
+
+		if !p.expect(token.Semi) {
+			return nil
 		}
 
 		return stmt
@@ -282,11 +306,16 @@ func (p *Parser) parseStatement() ast.Statement {
 		if !p.expect(token.Arrow) {
 			return nil
 		}
+
 		if !p.expect(token.LeftParen) {
 			return nil
 		}
 
-		stmt.Outputs = ast.Parameters(p.parseIdents(token.RightParen))
+		stmt.Outputs = p.parseParams(token.RightParen)
+
+		if !p.expect(token.Semi) {
+			return nil
+		}
 
 		return stmt
 

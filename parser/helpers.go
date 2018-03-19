@@ -152,6 +152,64 @@ func (p *Parser) parseIdents(end token.Type) []string {
 	return idents
 }
 
+func (p *Parser) parseParams(end token.Type) ast.Parameters {
+	var params []ast.Parameter
+
+	if p.peekIs(end) {
+		p.next()
+		return params
+	}
+
+	p.next()
+
+	param := p.parseParam()
+	if param == nil {
+		return params
+	}
+	params = append(params, *param)
+
+	for p.peekIs(token.Comma) {
+		p.next()
+
+		if p.peekIs(end) {
+			p.next()
+			return params
+		}
+
+		p.next()
+
+		param := p.parseParam()
+		if param == nil {
+			return params
+		}
+		params = append(params, *param)
+	}
+
+	if !p.expect(end) {
+		return nil
+	}
+
+	return params
+}
+
+func (p *Parser) parseParam() *ast.Parameter {
+	param := &ast.Parameter{}
+
+	if p.curIs(token.Macro) {
+		param.Macro = true
+		p.next()
+	}
+
+	if !p.curIs(token.Ident) {
+		p.curErr("a parameter must be either a macro or an identifier. got %s", p.cur.Type)
+		return nil
+	}
+
+	param.Name = p.cur.Literal
+
+	return param
+}
+
 func (p *Parser) parseStatements() []ast.Statement {
 	var stmts []ast.Statement
 	p.next()
