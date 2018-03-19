@@ -209,7 +209,11 @@ func (p *Parser) parseStatement() ast.Statement {
 			return nil
 		}
 
-		stmt.Delay = p.parseDuration()
+		delay := p.parseDuration()
+		if delay == nil {
+			return nil
+		}
+		stmt.Delay = *delay
 
 		if p.peekIs(token.Macro) {
 			p.next()

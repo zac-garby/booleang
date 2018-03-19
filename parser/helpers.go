@@ -123,26 +123,26 @@ func (p *Parser) parseIdents(end token.Type) []string {
 
 	if p.peekIs(end) {
 		p.next()
-		return exprs
+		return idents
 	}
 
 	if !p.expect(token.Ident) {
 		return idents
 	}
-	idents = append(exprs, p.cur.Literal)
+	idents = append(idents, p.cur.Literal)
 
 	for p.peekIs(token.Comma) {
 		p.next()
 
 		if p.peekIs(end) {
 			p.next()
-			return exprs
+			return idents
 		}
 
 		if !p.expect(token.Ident) {
 			return idents
 		}
-		idents = append(exprs, p.cur.Literal)
+		idents = append(idents, p.cur.Literal)
 	}
 
 	if !p.expect(end) {
