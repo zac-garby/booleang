@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/Zac-Garby/booleang/ast"
 	"github.com/Zac-Garby/booleang/token"
 )
 
@@ -91,4 +92,34 @@ func (p *Parser) parseDuration() *time.Duration {
 	dur *= time.Duration(val)
 
 	return &dur
+}
+
+func (p *Parser) parseExprs(end token.Type) []ast.Expression {
+	var exprs []ast.Expression
+
+	if p.peekIs(end) {
+		p.next()
+		return exprs
+	}
+
+	p.next()
+	exprs = append(exprs, p.parseExpression())
+
+	for p.peekIs(token.Comma) {
+		p.next()
+
+		if p.peekIs(end) {
+			p.next()
+			return exprs
+		}
+
+		p.next()
+		exprs = append(exprs, p.parseExpression())
+	}
+
+	if !p.expect(end) {
+		return nil
+	}
+
+	return exprs
 }
