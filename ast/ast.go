@@ -4,9 +4,9 @@ import "time"
 
 // A Node is the interface from which both expression types
 // and statement types extend.
-//
-// Note: doesn't actually contain any methods
-type Node interface{}
+type Node interface {
+	String() string
+}
 
 // A Statement is a piece of code which doesn't evaluate to
 // a value, such as a function call.
