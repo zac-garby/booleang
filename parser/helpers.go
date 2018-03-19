@@ -63,6 +63,7 @@ func (p *Parser) parseDuration() *time.Duration {
 
 	if math.Floor(val) != val {
 		p.curErr("clock duration must be an integer. use a smaller time denomination if necessary")
+		return nil
 	}
 
 	if !p.expect(token.Ident) {
