@@ -43,7 +43,7 @@ type Circuit struct {
 type Program struct {
 	Name     string
 	Includes []string
-	Circuits []Circuit
+	Circuits []*Circuit
 }
 
 type stmt struct{}
