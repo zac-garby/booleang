@@ -83,11 +83,11 @@ func (p *Parser) parseDuration() *time.Duration {
 	case "h":
 		dur = time.Hour
 	default:
-		p.curErr("expexcted ns, ms, s, m, or h to complete the clock duration. got %s", t)
+		p.curErr("expexcted ns, ms, s, m, or h to complete the clock duration. got %s", p.cur.Literal)
 		return nil
 	}
 
-	dur *= val
+	dur *= time.Duration(val)
 
 	return &dur
 }
