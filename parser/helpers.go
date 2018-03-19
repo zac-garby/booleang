@@ -123,3 +123,37 @@ func (p *Parser) parseExprs(end token.Type) []ast.Expression {
 
 	return exprs
 }
+
+func (p *Parser) parseIdents(end token.Type) []string {
+	var idents []string
+
+	if p.peekIs(end) {
+		p.next()
+		return exprs
+	}
+
+	if !p.expect(token.Ident) {
+		return idents
+	}
+	idents = append(exprs, p.cur.Literal)
+
+	for p.peekIs(token.Comma) {
+		p.next()
+
+		if p.peekIs(end) {
+			p.next()
+			return exprs
+		}
+
+		if !p.expect(token.Ident) {
+			return idents
+		}
+		idents = append(exprs, p.cur.Literal)
+	}
+
+	if !p.expect(end) {
+		return nil
+	}
+
+	return idents
+}
