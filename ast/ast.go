@@ -41,7 +41,7 @@ type Circuit struct {
 }
 
 // A Program is an optionally named sequence of circuit
-// definitions. The entrance point the circuit called
+// definitions. The entrance point is the circuit called
 // 'main' - if there isn't one, it won't be able to run.
 //
 // A Program also contains a list of includes, in order
