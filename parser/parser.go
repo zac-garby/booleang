@@ -281,11 +281,19 @@ func (p *Parser) parseStatement() ast.Statement {
 
 		return stmt
 
-	case token.Number, token.Prefix:
-		stmt := &ast.Pipe{
-			Inputs: []ast.Expression{
-				p.parseExpression(),
-			},
+	case token.Number, token.Prefix, token.LeftParen:
+		var stmt *ast.Pipe
+
+		if p.cur.Type == token.LeftParen {
+			stmt = &ast.Pipe{
+				Inputs: p.parseExprs(token.RightParen),
+			}
+		} else {
+			stmt = &ast.Pipe{
+				Inputs: []ast.Expression{
+					p.parseExpression(),
+				},
+			}
 		}
 
 		if !p.expect(token.Arrow) {
@@ -293,35 +301,18 @@ func (p *Parser) parseStatement() ast.Statement {
 		}
 		p.next()
 
-		param := p.parseParam()
-		if param == nil {
-			return nil
+		if p.cur.Type == token.LeftParen {
+			stmt.Outputs = p.parseParams(token.RightParen)
+		} else {
+			param := p.parseParam()
+			if param == nil {
+				return nil
+			}
+
+			stmt.Outputs = ast.Parameters{
+				*param,
+			}
 		}
-
-		stmt.Outputs = ast.Parameters{
-			*param,
-		}
-
-		if !p.expect(token.Semi) {
-			return nil
-		}
-
-		return stmt
-
-	case token.LeftParen:
-		stmt := &ast.Pipe{
-			Inputs: p.parseExprs(token.RightParen),
-		}
-
-		if !p.expect(token.Arrow) {
-			return nil
-		}
-
-		if !p.expect(token.LeftParen) {
-			return nil
-		}
-
-		stmt.Outputs = p.parseParams(token.RightParen)
 
 		if !p.expect(token.Semi) {
 			return nil

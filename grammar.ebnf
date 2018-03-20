@@ -27,11 +27,11 @@ char = ? all printable characters ?;
 
 ident = alpha, { alphanum };
 
-string = ('"', { char }, '"') |
-         ("'", { char }, "'");
+string = ( '"', { char }, '"' ) |
+         ( "'", { char }, "'" );
 
 number = [ "-" ], { digit }, [ ".", { digit } ];
-duration = number, ("ns" | "ms" | "s" | "m" | "h");
+duration = number, ( "ns" | "ms" | "s" | "m" | "h" );
 
 (* helpers *)
 
@@ -51,10 +51,9 @@ macro = "%", ident, idents, ";";
 call = ( ident, exprs, "->", ( ident | idents ), ";" ) |
        ( ident, exprs );
 
-pipe = ( exprs, "->", idents, ";" ) |
-       ( expr, "->", ident );
+pipe = ( ( expr | exprs ), "->", ( ident | idents ), ";" ) |
 
-clock = "clock", duration, ["%", ident], "{", stmts, "}";
+clock = "clock", duration, [ "%", ident ], "{", stmts, "}";
 
 stmts = { macro | call | pipe | clock };
 
@@ -62,4 +61,4 @@ stmts = { macro | call | pipe | clock };
 
 circuit = "circuit", ident, [ idents, "->", idents ], "{", stmts, "}";
 include = "include", [ "name" ], string, ";";
-program = ["name", ":", string, ";"], { circuit | include };
+program = [ "name", ":", string, ";" ], { circuit | include };
