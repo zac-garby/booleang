@@ -72,12 +72,22 @@ func (p *Parser) parse() *ast.Program {
 
 			prog.Circuits = append(prog.Circuits, circuit)
 		} else if p.cur.Type == token.Include {
+			byName := false
+
+			if p.peekIs(token.Name) {
+				p.next()
+				byName = true
+			}
+
 			path, ok := p.parseInclude()
 			if !ok {
 				return nil
 			}
 
-			prog.Includes = append(prog.Includes, path)
+			prog.Includes = append(prog.Includes, ast.Include{
+				ByName: byName,
+				Value:  path,
+			})
 		} else {
 			p.curErr("only circuits and include statements can be written in the top-level of a file")
 			return nil

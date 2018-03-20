@@ -40,6 +40,13 @@ type Circuit struct {
 	Statements      []Statement
 }
 
+// An Include represents a file included into a Program. A file
+// can be included either by name or path.
+type Include struct {
+	ByName bool
+	Value  string
+}
+
 // A Program is an optionally named sequence of circuit
 // definitions. The entrance point is the circuit called
 // 'main' - if there isn't one, it won't be able to run.
@@ -48,7 +55,7 @@ type Circuit struct {
 // of their lexical position.
 type Program struct {
 	Name     string
-	Includes []string
+	Includes []Include
 	Circuits []*Circuit
 }
 

@@ -44,6 +44,14 @@ func (p Parameters) String() string {
 	return strings.Join(strs, ", ")
 }
 
+func (i Include) String() string {
+	if i.ByName {
+		return fmt.Sprintf("<include name '%s'>", i.Value)
+	} else {
+		return fmt.Sprintf("<include path '%s'>", i.Value)
+	}
+}
+
 func exprs(in []Expression) string {
 	var strs []string
 
