@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"github.com/Zac-Garby/booleang/ast"
-	"github.com/Zac-Garby/booleang/lexer"
-	"github.com/Zac-Garby/booleang/token"
+	"github.com/zac-garby/booleang/ast"
+	"github.com/zac-garby/booleang/lexer"
+	"github.com/zac-garby/booleang/token"
 )
 
 // A Parser takes a sequence of tokens and constructs an abstract

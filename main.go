@@ -10,7 +10,7 @@ import (
 	"os/signal"
 	"path/filepath"
 
-	"github.com/Zac-Garby/booleang/parser"
+	"github.com/zac-garby/booleang/parser"
 )
 
 func main() {

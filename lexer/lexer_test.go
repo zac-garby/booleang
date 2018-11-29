@@ -3,8 +3,8 @@ package lexer_test
 import (
 	"testing"
 
-	. "github.com/Zac-Garby/booleang/lexer"
-	"github.com/Zac-Garby/booleang/token"
+	. "github.com/zac-garby/booleang/lexer"
+	"github.com/zac-garby/booleang/token"
 )
 
 func TestLexer(t *testing.T) {

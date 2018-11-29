@@ -3,7 +3,7 @@ package parser
 import (
 	"fmt"
 
-	"github.com/Zac-Garby/booleang/token"
+	"github.com/zac-garby/booleang/token"
 )
 
 // An Error represents an error encountered while parsing.

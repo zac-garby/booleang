@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/Zac-Garby/booleang/token"
+	"github.com/zac-garby/booleang/token"
 )
 
 // New takes a string and returns a stream of tokens in the form of

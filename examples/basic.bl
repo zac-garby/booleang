@@ -1,0 +1,7 @@
+name: "booleang basic example";
+
+circuit main () -> () {
+    0 -> a;
+    1 -> b;
+    obit(a ^ b);
+}

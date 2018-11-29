@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Zac-Garby/booleang/ast"
-	"github.com/Zac-Garby/booleang/token"
+	"github.com/zac-garby/booleang/ast"
+	"github.com/zac-garby/booleang/token"
 )
 
 func (p *Parser) next() {
